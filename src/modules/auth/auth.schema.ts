@@ -1,10 +1,9 @@
-// auth.schema.ts
 import { z } from "zod";
 
-export const registerSchema = z.object({
+export const signupSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
-  email: z.string().email().max(50),
+  email: z.email().max(50),
   password: z
     .string()
     .regex(
@@ -12,5 +11,15 @@ export const registerSchema = z.object({
       "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one special character"
     ),
   phone: z.string().length(10).optional(),
-  role: z.enum(["CLIENT", "CA"]),
+  role: z.enum(["CLIENT", "CA"]).optional(),
+});
+
+export const signinSchema = z.object({
+  email: z.email().max(50),
+  password: z
+    .string()
+    .regex(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*[\W_]).{8,}$/,
+      "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one special character"
+    ),
 });

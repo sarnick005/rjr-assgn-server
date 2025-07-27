@@ -1,17 +1,21 @@
 import { Request, Response } from "express";
-import { registerSchema } from "./auth.schema";
-import { registerUser } from "./auth.services";
+import { signinSchema, signupSchema } from "./auth.schema";
+import { signinUser, signupUser } from "./auth.services";
 import { ApiError, ApiResponse, asyncHandler } from "../../shared/utils";
 
-export const registerController = asyncHandler(
+export const signupController = asyncHandler(
   async (req: Request, res: Response) => {
-    const result = registerSchema.safeParse(req.body);
+    const result = signupSchema.safeParse(req.body);
 
     if (!result.success) {
-      throw new ApiError(400, "Validation Failed");
+      throw new ApiError(400, "Registration Validation Failed");
     }
 
-    const user = await registerUser(result.data);
+    const user = await signupUser(result.data);
+
+    if (!user) {
+      throw new ApiError(400, "Failed to create user");
+    }
 
     const response = new ApiResponse(
       201,
@@ -22,9 +26,30 @@ export const registerController = asyncHandler(
         firstName: user.firstName,
         lastName: user.lastName,
       },
-      "User registered successfully"
+      "User signuped successfully"
     );
 
     res.status(201).json(response);
+  }
+);
+
+export const signinController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const result = signinSchema.safeParse(req.body);
+    if (!result.success) {
+      throw new ApiError(400, "Signin Validation Failed");
+    }
+
+    const accessToken = await signinUser(result.data);
+
+    if (!accessToken) {
+      throw new ApiError(400, "Failed to signin user");
+    }
+    const response = new ApiResponse(
+      200,
+      { token: accessToken },
+      "User logged in successfully"
+    );
+    res.status(200).json(response);
   }
 );

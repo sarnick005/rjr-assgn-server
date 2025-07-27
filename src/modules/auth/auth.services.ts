@@ -1,10 +1,11 @@
-// auth.services.ts
 import { db } from "../../shared/config/db";
 import bcrypt from "bcryptjs";
-import { RegisterBody } from "./auth.type";
+import { SigninBody, SignupBody } from "./auth.type";
 import { ApiError } from "../../shared/utils";
+import { JWT_SECRET } from "../../shared/config/env";
+import jwt from "jsonwebtoken";
 
-export const registerUser = async (data: RegisterBody) => {
+export const signupUser = async (data: SignupBody) => {
   const { firstName, lastName, email, password, phone, role } = data;
 
   const existingUser = await db.user.findUnique({ where: { email } });
@@ -26,4 +27,22 @@ export const registerUser = async (data: RegisterBody) => {
   });
 
   return user;
+};
+
+export const signinUser = async (data: SigninBody) => {
+  const { email, password } = data;
+
+  const existingUser = await db.user.findUnique({ where: { email } });
+  if (!existingUser) {
+    throw new ApiError(409, "User doesn't exist");
+  }
+  const hashedPassword = existingUser.password;
+  const passwordMatch = bcrypt.compare(password, hashedPassword);
+  if (!passwordMatch) {
+    throw new ApiError(400, "Invalid credentials");
+  }
+  const accessToken = jwt.sign({ id: existingUser.id }, JWT_SECRET, {
+    expiresIn: "1d",
+  });
+  return accessToken;
 };
