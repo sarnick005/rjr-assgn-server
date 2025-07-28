@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev",
-    "prod": "tsc -b && node ./dist/server.js",
     "dev": "nodemon --watch src --ext ts --exec ts-node src/server.ts",
+    "build": "tsc -b",
+    "start": "node dist/server.js",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
     "studio": "npx prisma studio"
   },
   "keywords": [],
