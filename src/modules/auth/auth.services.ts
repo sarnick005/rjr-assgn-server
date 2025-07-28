@@ -6,7 +6,7 @@ import { JWT_SECRET } from "../../shared/config/env";
 import jwt from "jsonwebtoken";
 
 export const signupUser = async (data: SignupBody) => {
-  const { firstName, lastName, email, password, phone, role } = data;
+  const { name, email, password, phone, role } = data;
 
   const existingUser = await db.user.findUnique({ where: { email } });
   if (existingUser) {
@@ -17,8 +17,7 @@ export const signupUser = async (data: SignupBody) => {
 
   const user = await db.user.create({
     data: {
-      firstName,
-      lastName,
+      name,
       email,
       password: hashedPassword,
       phone,

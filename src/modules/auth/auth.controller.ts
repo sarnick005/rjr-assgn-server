@@ -23,8 +23,7 @@ export const signupController = asyncHandler(
         id: user.id,
         email: user.email,
         role: user.role,
-        firstName: user.firstName,
-        lastName: user.lastName,
+        name: user.name,
       },
       "User signuped successfully"
     );

@@ -16,7 +16,9 @@ if (logger) app.use(logger);
 
 // ROUTES
 import authRouter from "./modules/auth/auth.routes";
+import clientRouter from "./modules/client/client.route";
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/client", clientRouter);
 
 // ERROR HANDLER
 app.use(errorMiddleware);
