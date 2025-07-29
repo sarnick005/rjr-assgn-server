@@ -10,4 +10,5 @@ export const documentUploadSchema = z.object({
     "FINANCIALS",
     "OTHER",
   ]),
+  clientType: z.enum(["INDIVIDUAL", "ORGANIZATION"]),
 });

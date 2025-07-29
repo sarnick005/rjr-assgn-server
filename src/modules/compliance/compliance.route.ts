@@ -12,7 +12,7 @@ const complianceRouter = Router();
 
 complianceRouter.use(authMiddleware);
 
-complianceRouter.post("/", createComplianceController);
+complianceRouter.post("/:clientId/create", createComplianceController);
 
 complianceRouter.get(
   "/individual-client/:individualClientId",

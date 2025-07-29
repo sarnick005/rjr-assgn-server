@@ -9,8 +9,6 @@ export const invoiceItemSchema = z.object({
 
 export const createInvoiceSchema = z
   .object({
-    individualClientId: z.string().optional(),
-    organizationClientId: z.string().optional(),
     invoiceNumber: z.string(),
     dueDate: z.coerce.date(),
     items: z.array(invoiceItemSchema),
@@ -24,7 +22,3 @@ export const createInvoiceSchema = z
     paymentDate: z.coerce.date().optional(),
     notes: z.string().optional(),
   })
-  .refine((data) => data.individualClientId || data.organizationClientId, {
-    message:
-      "Either individualClientId or organizationClientId must be provided",
-  });

@@ -9,21 +9,27 @@ export const uploadDocumentService = async (
 ) => {
   const cloudinaryRes = await CloudinaryService.upload(filePath);
 
-  if (!cloudinaryRes || !cloudinaryRes.secure_url) {
+  if (!cloudinaryRes?.secure_url) {
     throw new Error("Document upload failed");
   }
 
-  const newDoc = await db.document.create({
-    data: {
-      type: body.type,
-      url: cloudinaryRes.secure_url,
-      individualClientId: clientDetailsId,
-      organizationClientId: clientDetailsId,
-    },
-  });
+  const data: any = {
+    type: body.type,
+    url: cloudinaryRes.secure_url,
+  };
 
+  if (body.clientType === "INDIVIDUAL") {
+    data.individualClientId = clientDetailsId;
+  } else if (body.clientType === "ORGANIZATION") {
+    data.organizationClientId = clientDetailsId;
+  } else {
+    throw new Error("Invalid client type");
+  }
+
+  const newDoc = await db.document.create({ data });
   return newDoc;
 };
+
 
 export const getClientDocumentsService = async (clientDetailsId: string) => {
   return db.document.findMany({

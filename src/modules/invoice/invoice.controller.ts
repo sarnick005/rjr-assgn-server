@@ -16,7 +16,10 @@ export const createInvoiceController = asyncHandler(
     if (!parsed.success) {
       throw new ApiError(400, "Invalid input");
     }
-    const invoice = await createInvoiceService(parsed.data);
+    console.log(parsed.data);
+    
+    const clientId = req.params.clientId;
+    const invoice = await createInvoiceService(parsed.data,clientId);
     res
       .status(201)
       .json(new ApiResponse(201, invoice, "Invoice created successfully"));

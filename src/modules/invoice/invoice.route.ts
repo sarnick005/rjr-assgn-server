@@ -13,7 +13,7 @@ const invoiceRouter = Router();
 
 invoiceRouter.use(authMiddleware);
 
-invoiceRouter.post("/", createInvoiceController);
+invoiceRouter.post("/:clientId", createInvoiceController);
 invoiceRouter.get("/:invoiceId", getInvoiceByIdController);
 invoiceRouter.put("/:invoiceId", updateInvoiceController);
 invoiceRouter.delete("/:invoiceId", deleteInvoiceController);

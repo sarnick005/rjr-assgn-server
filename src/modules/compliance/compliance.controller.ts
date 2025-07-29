@@ -15,7 +15,8 @@ export const createComplianceController = asyncHandler(
     if (!parsed.success) {
       throw new ApiError(400, "Invalid input", parsed.error.issues);
     }
-    const record = await createComplianceService(parsed.data);
+    const clientId = req.params.clientId;
+    const record = await createComplianceService(parsed.data,clientId);
     res
       .status(201)
       .json(new ApiResponse(201, record, "Compliance record created"));

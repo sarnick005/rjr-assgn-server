@@ -1,11 +1,14 @@
 import { db } from "../../shared/config/db";
 import { CreateInvoiceInput } from "./invoice.type";
 
-export const createInvoiceService = async (data: CreateInvoiceInput) => {
+export const createInvoiceService = async (
+  data: CreateInvoiceInput,
+  clientId: string
+) => {
   return db.invoice.create({
     data: {
-      individualClientId: data.individualClientId,
-      organizationClientId: data.organizationClientId,
+      individualClientId: clientId || "",
+      organizationClientId: clientId || "",
       invoiceNumber: data.invoiceNumber,
       dueDate: data.dueDate,
       totalAmount: data.totalAmount,

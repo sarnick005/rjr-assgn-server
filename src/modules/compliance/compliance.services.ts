@@ -4,7 +4,10 @@ import {
   GetCompliancesByClientInput,
 } from "./compliance.type";
 
-export const createComplianceService = async (data: CreateComplianceInput) => {
+export const createComplianceService = async (
+  data: CreateComplianceInput,
+  clientId: string
+) => {
   return db.complianceRecord.create({
     data: {
       type: data.type,
@@ -12,8 +15,8 @@ export const createComplianceService = async (data: CreateComplianceInput) => {
       filedOn: data.filedOn,
       status: data.status,
       remarks: data.remarks,
-      individualClientId: data.individualClientId,
-      organizationClientId: data.organizationClientId,
+      individualClientId: clientId,
+      organizationClientId: clientId,
     },
     include: {
       individualClient: true,
@@ -84,8 +87,6 @@ export const updateComplianceService = async (
       filedOn: data.filedOn,
       status: data.status,
       remarks: data.remarks,
-      individualClientId: data.individualClientId,
-      organizationClientId: data.organizationClientId,
     },
     include: {
       individualClient: true,
