@@ -15,57 +15,7 @@ export const createComplianceService = async (
       filedOn: data.filedOn,
       status: data.status,
       remarks: data.remarks,
-      individualClientId: clientId,
-      organizationClientId: clientId,
     },
-    include: {
-      individualClient: true,
-      organizationClient: true,
-    },
-  });
-};
-
-export const getCompliancesByClientService = async (
-  clientFilter: GetCompliancesByClientInput
-) => {
-  return db.complianceRecord.findMany({
-    where: {
-      OR: [
-        { individualClientId: clientFilter.individualClientId },
-        { organizationClientId: clientFilter.organizationClientId },
-      ],
-    },
-    include: {
-      individualClient: true,
-      organizationClient: true,
-    },
-    orderBy: { dueDate: "asc" },
-  });
-};
-
-export const getCompliancesByIndividualClientService = async (
-  individualClientId: string
-) => {
-  return db.complianceRecord.findMany({
-    where: { individualClientId },
-    include: {
-      individualClient: true,
-      organizationClient: true,
-    },
-    orderBy: { dueDate: "asc" },
-  });
-};
-
-export const getCompliancesByOrganizationClientService = async (
-  organizationClientId: string
-) => {
-  return db.complianceRecord.findMany({
-    where: { organizationClientId },
-    include: {
-      individualClient: true,
-      organizationClient: true,
-    },
-    orderBy: { dueDate: "asc" },
   });
 };
 
@@ -87,10 +37,6 @@ export const updateComplianceService = async (
       filedOn: data.filedOn,
       status: data.status,
       remarks: data.remarks,
-    },
-    include: {
-      individualClient: true,
-      organizationClient: true,
     },
   });
 };

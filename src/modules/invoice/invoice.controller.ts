@@ -3,9 +3,6 @@ import { ApiError, ApiResponse, asyncHandler } from "../../shared/utils";
 import { createInvoiceSchema } from "./invoice.schema";
 import {
   createInvoiceService,
-  getInvoicesByIndividualClientService,
-  getInvoicesByOrganizationClientService,
-  getInvoiceByIdService,
   updateInvoiceService,
   deleteInvoiceService,
 } from "./invoice.services";
@@ -26,45 +23,6 @@ export const createInvoiceController = asyncHandler(
   }
 );
 
-export const getInvoicesByIndividualClientController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const individualClientId = req.params.individualClientId;
-    if (!individualClientId)
-      throw new ApiError(400, "Missing individual client ID");
-    const invoices = await getInvoicesByIndividualClientService(
-      individualClientId
-    );
-    res
-      .status(200)
-      .json(new ApiResponse(200, invoices, "Invoices fetched successfully"));
-  }
-);
-
-export const getInvoicesByOrganizationClientController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const organizationClientId = req.params.organizationClientId;
-    if (!organizationClientId)
-      throw new ApiError(400, "Missing organization client ID");
-    const invoices = await getInvoicesByOrganizationClientService(
-      organizationClientId
-    );
-    res
-      .status(200)
-      .json(new ApiResponse(200, invoices, "Invoices fetched successfully"));
-  }
-);
-
-export const getInvoiceByIdController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const invoiceId = req.params.invoiceId;
-    if (!invoiceId) throw new ApiError(400, "Missing invoice ID");
-    const invoice = await getInvoiceByIdService(invoiceId);
-    if (!invoice) throw new ApiError(404, "Invoice not found");
-    res
-      .status(200)
-      .json(new ApiResponse(200, invoice, "Invoice fetched successfully"));
-  }
-);
 
 export const updateInvoiceController = asyncHandler(
   async (req: Request, res: Response) => {

@@ -135,8 +135,8 @@ model IndividualClientDetails {
   // Relations
   bankAccounts      BankAccount[]
   documents         Document[]
-  complianceRecords ComplianceRecord[]
-  invoices          Invoice[]
+  // complianceRecords ComplianceRecord[]
+  // invoices          Invoice[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -157,8 +157,8 @@ model OrganizationClient {
   // Relations
   bankAccounts      BankAccount[]
   documents         Document[]
-  complianceRecords ComplianceRecord[]
-  invoices          Invoice[]
+  // complianceRecords ComplianceRecord[]
+  // invoices          Invoice[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -206,10 +206,10 @@ model ComplianceRecord {
   status  ComplianceStatus
   remarks String?
 
-  individualClientId   String?
-  organizationClientId String?
-  individualClient     IndividualClientDetails? @relation(fields: [individualClientId], references: [id], onDelete: Cascade)
-  organizationClient   OrganizationClient?      @relation(fields: [organizationClientId], references: [id], onDelete: Cascade)
+  // individualClientId   String?
+  // organizationClientId String?
+  // individualClient     IndividualClientDetails? @relation(fields: [individualClientId], references: [id], onDelete: Cascade)
+  // organizationClient   OrganizationClient?      @relation(fields: [organizationClientId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -229,10 +229,10 @@ model Invoice {
   paymentDate   DateTime?
   notes         String?
 
-  individualClientId   String?
-  organizationClientId String?
-  individualClient     IndividualClientDetails? @relation(fields: [individualClientId], references: [id], onDelete: Cascade)
-  organizationClient   OrganizationClient?      @relation(fields: [organizationClientId], references: [id], onDelete: Cascade)
+  // individualClientId   String?
+  // organizationClientId String?
+  // individualClient     IndividualClientDetails? @relation(fields: [individualClientId], references: [id], onDelete: Cascade)
+  // organizationClient   OrganizationClient?      @relation(fields: [organizationClientId], references: [id], onDelete: Cascade)
 
   // Relations
   items InvoiceItem[]

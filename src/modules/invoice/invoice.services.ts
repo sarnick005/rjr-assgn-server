@@ -7,8 +7,6 @@ export const createInvoiceService = async (
 ) => {
   return db.invoice.create({
     data: {
-      individualClientId: clientId || "",
-      organizationClientId: clientId || "",
       invoiceNumber: data.invoiceNumber,
       dueDate: data.dueDate,
       totalAmount: data.totalAmount,
@@ -29,46 +27,10 @@ export const createInvoiceService = async (
     },
     include: {
       items: true,
-      individualClient: true,
-      organizationClient: true,
     },
   });
 };
 
-export const getInvoicesByIndividualClientService = async (
-  individualClientId: string
-) => {
-  return db.invoice.findMany({
-    where: { individualClientId },
-    include: {
-      items: true,
-      individualClient: true,
-    },
-  });
-};
-
-export const getInvoicesByOrganizationClientService = async (
-  organizationClientId: string
-) => {
-  return db.invoice.findMany({
-    where: { organizationClientId },
-    include: {
-      items: true,
-      organizationClient: true,
-    },
-  });
-};
-
-export const getInvoiceByIdService = async (invoiceId: string) => {
-  return db.invoice.findUnique({
-    where: { id: invoiceId },
-    include: {
-      items: true,
-      individualClient: true,
-      organizationClient: true,
-    },
-  });
-};
 
 export const updateInvoiceService = async (
   invoiceId: string,
@@ -105,9 +67,7 @@ export const updateInvoiceService = async (
     data: updateData,
     include: {
       items: true,
-      individualClient: true,
-      organizationClient: true,
-    },
+        },
   });
 };
 

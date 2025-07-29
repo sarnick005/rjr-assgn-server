@@ -3,8 +3,6 @@ import { authMiddleware } from "../../shared/middleware/auth.middleware";
 import {
   createComplianceController,
   deleteComplianceController,
-  getCompliancesByIndividualClientController,
-  getCompliancesByOrganizationClientController,
   updateComplianceController,
 } from "./compliance.controller";
 
@@ -13,16 +11,6 @@ const complianceRouter = Router();
 complianceRouter.use(authMiddleware);
 
 complianceRouter.post("/:clientId/create", createComplianceController);
-
-complianceRouter.get(
-  "/individual-client/:individualClientId",
-  getCompliancesByIndividualClientController
-);
-
-complianceRouter.get(
-  "/organization-client/:organizationClientId",
-  getCompliancesByOrganizationClientController
-);
 
 complianceRouter.put("/:complianceId", updateComplianceController);
 

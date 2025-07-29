@@ -3,8 +3,6 @@ import { ApiError, ApiResponse, asyncHandler } from "../../shared/utils";
 import {
   createComplianceService,
   deleteComplianceService,
-  getCompliancesByIndividualClientService,
-  getCompliancesByOrganizationClientService,
   updateComplianceService,
 } from "./compliance.services";
 import { createComplianceSchema } from "./compliance.schema";
@@ -23,35 +21,6 @@ export const createComplianceController = asyncHandler(
   }
 );
 
-export const getCompliancesByIndividualClientController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const individualClientId = req.params.individualClientId;
-    if (!individualClientId) {
-      throw new ApiError(400, "Individual Client ID is required");
-    }
-    const records = await getCompliancesByIndividualClientService(
-      individualClientId
-    );
-    res
-      .status(200)
-      .json(new ApiResponse(200, records, "Compliance records fetched"));
-  }
-);
-
-export const getCompliancesByOrganizationClientController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const organizationClientId = req.params.organizationClientId;
-    if (!organizationClientId) {
-      throw new ApiError(400, "Organization Client ID is required");
-    }
-    const records = await getCompliancesByOrganizationClientService(
-      organizationClientId
-    );
-    res
-      .status(200)
-      .json(new ApiResponse(200, records, "Compliance records fetched"));
-  }
-);
 
 export const updateComplianceController = asyncHandler(
   async (req: Request, res: Response) => {
