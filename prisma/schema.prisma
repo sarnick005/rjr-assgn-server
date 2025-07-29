@@ -104,28 +104,24 @@ model User {
   password  String
   name      String
   phone     String?
-  role      UserRole @default(CLIENT)
+  role      UserRole @default(CA)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relationships
-  clientDetails   ClientDetails? @relation(fields: [clientDetailsId], references: [id], onDelete: Cascade)
-  clientDetailsId String?
+  IndividualClientDetails IndividualClientDetails[]
+
+  OrganizationClient OrganizationClient[]
 
   @@map("users")
 }
 
-model ClientDetails {
-  id             String     @id @default(cuid())
-  type           ClientType
-  panNumber      String     @unique
-  aadhaarNumber  String?    @unique
-  passportNumber String?    @unique
-  gstin          String?    @unique
-  cin            String?    @unique
-  tanNumber      String?    @unique
-  msmeNumber     String?    @unique
-  iecCode        String?    @unique
+model IndividualClientDetails {
+  id            String   @id @default(cuid())
+  fullName      String
+  gender        Gender?
+  dob           DateTime
+  panNumber     String   @unique
+  aadhaarNumber String?  @unique
 
   contactEmail     String
   contactPhone     String
@@ -133,9 +129,10 @@ model ClientDetails {
   permanentAddress String?
   officeAddress    String?
 
+  caId String
+  ca   User   @relation(fields: [caId], references: [id])
+
   // Relations
-  individual        IndividualClient?
-  organization      OrganizationClient?
   bankAccounts      BankAccount[]
   documents         Document[]
   complianceRecords ComplianceRecord[]
@@ -144,96 +141,118 @@ model ClientDetails {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  User User[]
-}
-
-model IndividualClient {
-  id            String        @id @default(cuid())
-  fullName      String
-  gender        Gender?
-  dob           DateTime
-  clientDetails ClientDetails @relation(fields: [clientDetailsId], references: [id], onDelete: Cascade)
-
-  clientDetailsId String @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@map("individual_client_details")
 }
 
 model OrganizationClient {
-  id                String        @id @default(cuid())
+  id                String             @id @default(cuid())
   businessName      String
   entityType        EntityType
   incorporationDate DateTime
-  clientDetails     ClientDetails @relation(fields: [clientDetailsId], references: [id], onDelete: Cascade)
-
-  clientDetailsId String @unique
+  panNumber         String             @unique
+  aadhaarNumber     String?            @unique
+  gstNumber         String?            @unique
+  caId              String
+  ca                User               @relation(fields: [caId], references: [id])
+  // Relations
+  bankAccounts      BankAccount[]
+  documents         Document[]
+  complianceRecords ComplianceRecord[]
+  invoices          Invoice[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("organization_clients")
 }
 
 model BankAccount {
-  id            String        @id @default(cuid())
-  clientDetails ClientDetails @relation(fields: [clientDetailsId], references: [id], onDelete: Cascade)
+  id            String      @id @default(cuid())
+  bankName      String
+  accountNumber String
+  ifscCode      String
+  accountType   AccountType
 
-  clientDetailsId String
-  bankName        String
-  accountNumber   String
-  ifscCode        String
-  accountType     AccountType
-  createdAt       DateTime    @default(now())
+  individualClientId   String?
+  organizationClientId String?
+  individualClient     IndividualClientDetails? @relation(fields: [individualClientId], references: [id], onDelete: Cascade)
+  organizationClient   OrganizationClient?      @relation(fields: [organizationClientId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@map("bank_accounts")
 }
 
 model Document {
-  id            String        @id @default(cuid())
-  clientDetails ClientDetails @relation(fields: [clientDetailsId], references: [id], onDelete: Cascade)
+  id   String       @id @default(cuid())
+  type DocumentType
+  url  String
 
-  clientDetailsId String
-  type            DocumentType
-  url             String
-  uploadedAt      DateTime     @default(now())
+  individualClientId   String?
+  organizationClientId String?
+  individualClient     IndividualClientDetails? @relation(fields: [individualClientId], references: [id], onDelete: Cascade)
+  organizationClient   OrganizationClient?      @relation(fields: [organizationClientId], references: [id], onDelete: Cascade)
+
+  uploadedAt DateTime @default(now())
+
+  @@map("documents")
 }
 
 model ComplianceRecord {
-  id            String        @id @default(cuid())
-  clientDetails ClientDetails @relation(fields: [clientDetailsId], references: [id], onDelete: Cascade)
+  id      String           @id @default(cuid())
+  type    ComplianceType
+  dueDate DateTime
+  filedOn DateTime?
+  status  ComplianceStatus
+  remarks String?
 
-  clientDetailsId String
-  type            ComplianceType
-  dueDate         DateTime
-  filedOn         DateTime?
-  status          ComplianceStatus
-  remarks         String?
-  createdAt       DateTime         @default(now())
+  individualClientId   String?
+  organizationClientId String?
+  individualClient     IndividualClientDetails? @relation(fields: [individualClientId], references: [id], onDelete: Cascade)
+  organizationClient   OrganizationClient?      @relation(fields: [organizationClientId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@map("compliance_records")
 }
 
 model Invoice {
-  id              String         @id @default(cuid())
-  clientDetails   ClientDetails  @relation(fields: [clientDetailsId], references: [id], onDelete: Cascade)
-  clientDetailsId String
-  invoiceNumber   String         @unique
-  issueDate       DateTime       @default(now())
-  dueDate         DateTime
-  items           InvoiceItem[]
-  totalAmount     Decimal        @db.Decimal(10, 2)
-  taxAmount       Decimal        @db.Decimal(10, 2)
-  grandTotal      Decimal        @db.Decimal(10, 2)
-  status          InvoiceStatus
-  paymentMethod   PaymentMethod?
-  paymentDate     DateTime?
-  notes           String?
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  id            String         @id @default(cuid())
+  invoiceNumber String         @unique
+  issueDate     DateTime       @default(now())
+  dueDate       DateTime
+  totalAmount   Decimal        @db.Decimal(10, 2)
+  taxAmount     Decimal        @db.Decimal(10, 2)
+  grandTotal    Decimal        @db.Decimal(10, 2)
+  status        InvoiceStatus
+  paymentMethod PaymentMethod?
+  paymentDate   DateTime?
+  notes         String?
+
+  individualClientId   String?
+  organizationClientId String?
+  individualClient     IndividualClientDetails? @relation(fields: [individualClientId], references: [id], onDelete: Cascade)
+  organizationClient   OrganizationClient?      @relation(fields: [organizationClientId], references: [id], onDelete: Cascade)
+
+  // Relations
+  items InvoiceItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("invoices")
 }
 
 model InvoiceItem {
-  id      String  @id @default(cuid())
-  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-
-  invoiceId   String
+  id          String  @id @default(cuid())
   description String
   quantity    Int
   unitPrice   Decimal @db.Decimal(10, 2)
   amount      Decimal @db.Decimal(10, 2)
+
+  // Foreign key 
+  invoiceId String
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@map("invoice_items")
 }

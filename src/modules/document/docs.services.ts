@@ -1,5 +1,4 @@
 import { CloudinaryService } from "../../lib/cloudinary";
-import { UploadApiResponse } from "cloudinary";
 import { db } from "../../shared/config/db";
 import { DocumentUploadInput } from "./docs.type";
 
@@ -16,9 +15,10 @@ export const uploadDocumentService = async (
 
   const newDoc = await db.document.create({
     data: {
-      clientDetailsId,
       type: body.type,
       url: cloudinaryRes.secure_url,
+      individualClientId: clientDetailsId,
+      organizationClientId: clientDetailsId,
     },
   });
 
@@ -27,7 +27,12 @@ export const uploadDocumentService = async (
 
 export const getClientDocumentsService = async (clientDetailsId: string) => {
   return db.document.findMany({
-    where: { clientDetailsId },
+    where: {
+      OR: [
+        { individualClientId: clientDetailsId },
+        { organizationClientId: clientDetailsId },
+      ],
+    },
     orderBy: { uploadedAt: "desc" },
   });
 };

@@ -3,7 +3,7 @@ import { Router } from "express";
 const router = Router();
 
 import authRouter from "./modules/auth/auth.routes";
-import clientRouter from "./modules/client/client.route";
+import clientRouter from "./modules/clients/client.route";
 import documentRouter from "./modules/document/docs.route";
 import invoiceRouter from "./modules/invoice/invoice.route";
 import complianceRouter from "./modules/compliance/compliance.route";

@@ -1,19 +1,31 @@
 import { Router } from "express";
+import { authMiddleware } from "../../shared/middleware/auth.middleware";
 import {
   createComplianceController,
   deleteComplianceController,
-  getCompliancesByClientController,
+  getCompliancesByIndividualClientController,
+  getCompliancesByOrganizationClientController,
+  updateComplianceController,
 } from "./compliance.controller";
-import { authMiddleware } from "../../shared/middleware/auth.middleware";
 
 const complianceRouter = Router();
+
 complianceRouter.use(authMiddleware);
 
 complianceRouter.post("/", createComplianceController);
+
 complianceRouter.get(
-  "/client/:clientDetailsId",
-  getCompliancesByClientController
+  "/individual-client/:individualClientId",
+  getCompliancesByIndividualClientController
 );
+
+complianceRouter.get(
+  "/organization-client/:organizationClientId",
+  getCompliancesByOrganizationClientController
+);
+
+complianceRouter.put("/:complianceId", updateComplianceController);
+
 complianceRouter.delete("/:complianceId", deleteComplianceController);
 
 export default complianceRouter;

@@ -15,7 +15,7 @@ export const uploadDocumentController = asyncHandler(
 
     const parsed = documentUploadSchema.safeParse(req.body);
     if (!parsed.success) {
-      throw new ApiError(400, "Invalid input data");
+      throw new ApiError(400, "Invalid input data", parsed.error.issues);
     }
 
     const clientDetailsId = req.params.clientDetailsId;

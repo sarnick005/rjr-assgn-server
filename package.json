@@ -9,7 +9,8 @@
     "start": "node dist/server.js",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
-    "studio": "npx prisma studio"
+    "studio": "npx prisma studio",
+    "db:reset": "prisma migrate reset"
   },
   "keywords": [],
   "author": "",

@@ -12,13 +12,13 @@ const documentRouter = Router();
 documentRouter.use(authMiddleware);
 
 documentRouter.post(
-  "/upload/:clientId",
-  uploadMulterMiddleware.fields([{ name: "document", maxCount: 1 }]),
+  "/upload/:clientDetailsId",
+  uploadMulterMiddleware.single("document"),
   uploadDocumentController
 );
 
-documentRouter.delete("/:documentId", deleteDocumentController);
+documentRouter.get("/client/:clientDetailsId", getClientDocumentsController);
 
-documentRouter.get("/client/:clientId", getClientDocumentsController);
+documentRouter.delete("/:documentId", deleteDocumentController);
 
 export default documentRouter;
