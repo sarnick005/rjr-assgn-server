@@ -3,7 +3,6 @@ import { ApiError, ApiResponse, asyncHandler } from "../../shared/utils";
 import { documentUploadSchema } from "./docs.schema";
 import {
   deleteDocumentService,
-  getClientDocumentsService,
   uploadDocumentService,
 } from "./docs.services";
 
@@ -29,17 +28,6 @@ export const uploadDocumentController = asyncHandler(
     res
       .status(201)
       .json(new ApiResponse(201, doc, "Document uploaded successfully"));
-  }
-);
-
-export const getClientDocumentsController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const clientDetailsId = req.params.clientDetailsId;
-    const documents = await getClientDocumentsService(clientDetailsId);
-
-    res
-      .status(200)
-      .json(new ApiResponse(200, documents, "Documents fetched successfully"));
   }
 );
 

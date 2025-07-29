@@ -133,10 +133,7 @@ model IndividualClientDetails {
   ca   User   @relation(fields: [caId], references: [id])
 
   // Relations
-  bankAccounts      BankAccount[]
-  documents         Document[]
-  // complianceRecords ComplianceRecord[]
-  // invoices          Invoice[]
+  bankAccounts BankAccount[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -145,20 +142,17 @@ model IndividualClientDetails {
 }
 
 model OrganizationClient {
-  id                String             @id @default(cuid())
+  id                String        @id @default(cuid())
   businessName      String
   entityType        EntityType
   incorporationDate DateTime
-  panNumber         String             @unique
-  aadhaarNumber     String?            @unique
-  gstNumber         String?            @unique
+  panNumber         String        @unique
+  aadhaarNumber     String?       @unique
+  gstNumber         String?       @unique
   caId              String
-  ca                User               @relation(fields: [caId], references: [id])
+  ca                User          @relation(fields: [caId], references: [id])
   // Relations
   bankAccounts      BankAccount[]
-  documents         Document[]
-  // complianceRecords ComplianceRecord[]
-  // invoices          Invoice[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -188,10 +182,7 @@ model Document {
   type DocumentType
   url  String
 
-  individualClientId   String?
-  organizationClientId String?
-  individualClient     IndividualClientDetails? @relation(fields: [individualClientId], references: [id], onDelete: Cascade)
-  organizationClient   OrganizationClient?      @relation(fields: [organizationClientId], references: [id], onDelete: Cascade)
+  clientId String?
 
   uploadedAt DateTime @default(now())
 
@@ -205,11 +196,6 @@ model ComplianceRecord {
   filedOn DateTime?
   status  ComplianceStatus
   remarks String?
-
-  // individualClientId   String?
-  // organizationClientId String?
-  // individualClient     IndividualClientDetails? @relation(fields: [individualClientId], references: [id], onDelete: Cascade)
-  // organizationClient   OrganizationClient?      @relation(fields: [organizationClientId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -228,11 +214,6 @@ model Invoice {
   paymentMethod PaymentMethod?
   paymentDate   DateTime?
   notes         String?
-
-  // individualClientId   String?
-  // organizationClientId String?
-  // individualClient     IndividualClientDetails? @relation(fields: [individualClientId], references: [id], onDelete: Cascade)
-  // organizationClient   OrganizationClient?      @relation(fields: [organizationClientId], references: [id], onDelete: Cascade)
 
   // Relations
   items InvoiceItem[]

@@ -2,7 +2,6 @@ import { Router } from "express";
 import {
   uploadDocumentController,
   deleteDocumentController,
-  getClientDocumentsController,
 } from "./docs.controller";
 import { authMiddleware } from "../../shared/middleware/auth.middleware";
 import { uploadMulterMiddleware } from "../../shared/middleware/multer.middleware";
@@ -16,8 +15,6 @@ documentRouter.post(
   uploadMulterMiddleware.single("document"),
   uploadDocumentController
 );
-
-documentRouter.get("/client/:clientDetailsId", getClientDocumentsController);
 
 documentRouter.delete("/:documentId", deleteDocumentController);
 

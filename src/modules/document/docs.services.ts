@@ -5,7 +5,7 @@ import { DocumentUploadInput } from "./docs.type";
 export const uploadDocumentService = async (
   filePath: string,
   body: DocumentUploadInput,
-  clientDetailsId: string
+  clientId: string
 ) => {
   const cloudinaryRes = await CloudinaryService.upload(filePath);
 
@@ -16,31 +16,11 @@ export const uploadDocumentService = async (
   const data: any = {
     type: body.type,
     url: cloudinaryRes.secure_url,
+    clientId,
   };
-
-  if (body.clientType === "INDIVIDUAL") {
-    data.individualClientId = clientDetailsId;
-  } else if (body.clientType === "ORGANIZATION") {
-    data.organizationClientId = clientDetailsId;
-  } else {
-    throw new Error("Invalid client type");
-  }
 
   const newDoc = await db.document.create({ data });
   return newDoc;
-};
-
-
-export const getClientDocumentsService = async (clientDetailsId: string) => {
-  return db.document.findMany({
-    where: {
-      OR: [
-        { individualClientId: clientDetailsId },
-        { organizationClientId: clientDetailsId },
-      ],
-    },
-    orderBy: { uploadedAt: "desc" },
-  });
 };
 
 export const deleteDocumentService = async (documentId: string) => {
